@@ -25,6 +25,9 @@
 #define SHA256_DIGEST_SIZE 256
 #define SHA1_DIGEST_SIZE 20
 
+#define STRING 1
+#define FILE 2
+
 #ifdef __cplusplus
 extern "C"
 {
