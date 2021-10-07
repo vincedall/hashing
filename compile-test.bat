@@ -1,2 +1,2 @@
-gcc -Wall source\test.c -otest.exe -L. -lhash
+gcc -D STATIC -Wall source\test.c -otest.exe -L. -lhash
 pause

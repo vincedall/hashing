@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <string.h>
 #include "hash.h"
 
 //23232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323
@@ -20,15 +19,15 @@ int main(){
 		0x23, 0x23, 0x23, 0x23,
 		0x23, 0x23, 0x23, 0x23,
 		0x23, 0x23, 0x23, 0x23,
-		0x23, 0x23, 0x23, 0x80,
+		0x23, 0x23, 0x23, 0x00,
 		0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x01, 0xb8
+		0x00, 0x00, 0x00, 0x00
 	};
 	struct H h;
 	unsigned char digest[20];
 	sha1begin(&h);
-	sha1update(buf, 64, &h);
-	sha1finish(NULL, 0, &h, digest);
+	//sha1update(buf, 64, &h);
+	sha1finish(buf, 55, &h, digest);
 	
 	for (int i = 0; i < 20; i++){
 		printf("%x", digest[i]);

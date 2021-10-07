@@ -19,7 +19,6 @@
 	#define ADDCALL
 	#define EXTERN extern
 #endif
-	
 
 #define SHA3_256_DIGEST_SIZE 256
 #define SHA256_DIGEST_SIZE 256
@@ -31,6 +30,7 @@ struct H{
 	unsigned int h2;
 	unsigned int h3;
 	unsigned int h4;
+	unsigned long mlen;
 };
 
 #ifdef __cplusplus
