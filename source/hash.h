@@ -30,7 +30,7 @@ struct H{
 	unsigned int h2;
 	unsigned int h3;
 	unsigned int h4;
-	unsigned long mlen;
+	unsigned long long mlen;
 };
 
 #ifdef __cplusplus
@@ -38,13 +38,6 @@ extern "C"
 {
 #endif
 
-/*** The sha3-256 hash function.
-@param buf The buffer containing the data to be hashed.
-@param len The length of the buffer.
-@param digest The hash of the data in buffer.
-*/
-EXTERN ADDAPI void ADDCALL sha3_256(unsigned char* buf, unsigned long len, unsigned char* digest);
-EXTERN ADDAPI void ADDCALL sha256(unsigned char* buf, unsigned long len, unsigned char* digest);
 EXTERN ADDAPI void ADDCALL sha1begin(struct H* h);
 EXTERN ADDAPI void ADDCALL sha1update(unsigned char* buf, unsigned long len, struct H* h);
 EXTERN ADDAPI void ADDCALL sha1finish(unsigned char* buf, unsigned long len, struct H* h, unsigned char* digest);

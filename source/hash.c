@@ -1,100 +1,8 @@
 #include "hash.h"
 #include <stdio.h>
 
-const unsigned int k[80] = {
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x5a827999, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x6ed9eba1, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0x8f1bbcdc, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6, 
-	0xca62c1d6
-};
-
-/*SHA-1 functions*/
 unsigned int leftrotate(unsigned int x, unsigned int offset){
     return (x << offset) | (x >> (32 - offset));
-}
-
-void sha3_256(unsigned char* buf, unsigned long len, unsigned char* digest){
-	
-}
-
-void sha256(unsigned char* buf, unsigned long len, unsigned char* digest){
-	
 }
 
 void sha1begin(struct H* h){
@@ -103,6 +11,7 @@ void sha1begin(struct H* h){
 	h->h2 = 0x98badcfe;
 	h->h3 = 0x10325476;
 	h->h4 = 0xc3d2e1f0;
+	h->mlen = 0;
 }
 
 void sha1update(unsigned char* buf, unsigned long len, struct H* h){
@@ -140,13 +49,13 @@ void sha1update(unsigned char* buf, unsigned long len, struct H* h){
 		
 		for (unsigned int t = 0; t < 80; t++){
 			if (t < 20){
-				T = leftrotate(a, 5) + ((b & c) ^ (~b & d)) + e + k[t] + w[t];
+				T = leftrotate(a, 5) + ((b & c) ^ (~b & d)) + e + 0x5a827999 + w[t];
 			}else if (t > 19 && t < 40){
-				T = leftrotate(a, 5) + (b ^ c ^ d) + e + k[t] + w[t];
+				T = leftrotate(a, 5) + (b ^ c ^ d) + e + 0x6ed9eba1 + w[t];
 			}else if (t > 39 && t < 60){
-				T = leftrotate(a, 5) + ((b & c) ^ (b & d) ^ (c & d)) + e + k[t] + w[t];
+				T = leftrotate(a, 5) + ((b & c) ^ (b & d) ^ (c & d)) + e + 0x8f1bbcdc + w[t];
 			}else{
-				T = leftrotate(a, 5) + (b ^ c ^ d) + e + k[t] + w[t];
+				T = leftrotate(a, 5) + (b ^ c ^ d) + e + 0xca62c1d6 + w[t];
 			}
 			e = d;
 			d = c;
@@ -165,18 +74,18 @@ void sha1update(unsigned char* buf, unsigned long len, struct H* h){
 void sha1finish(unsigned char* buf, unsigned long len, struct H* h, unsigned char* digest){
 	buf[len] = 0x80;
 	h->mlen += len * 8;
-	unsigned long zeroes = (448 - ((h->mlen + 1) % 512));
+	unsigned long long zeroes = 448 - ((h->mlen + 1) % 512);
 	zeroes -= 7;
-	buf[len + zeroes] = h->mlen >> 56;
-	buf[len + zeroes + 1] = h->mlen >> 48;
-	buf[len + zeroes + 2] = h->mlen >> 40;
-	buf[len + zeroes + 3] = h->mlen >> 32;
-	buf[len + zeroes + 4] = h->mlen >> 24;
-	buf[len + zeroes + 5] = h->mlen >> 16;
-	buf[len + zeroes + 6] = h->mlen >> 8;
-	buf[len + zeroes + 7] = h->mlen;
+	buf[len + zeroes + 1] = h->mlen >> 56;
+	buf[len + zeroes + 2] = h->mlen >> 48;
+	buf[len + zeroes + 3] = h->mlen >> 40;
+	buf[len + zeroes + 4] = h->mlen >> 32;
+	buf[len + zeroes + 5] = h->mlen >> 24;
+	buf[len + zeroes + 6] = h->mlen >> 16;
+	buf[len + zeroes + 7] = h->mlen >> 8;
+	buf[len + zeroes + 8] = h->mlen;
 	
-	sha1update(buf, len, h);
+	sha1update(buf, 64, h);
 	
 	digest[0] = h->h0 >> 24;
 	digest[1] = h->h0 >> 16;
