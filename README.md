@@ -8,7 +8,12 @@ This piece of software requires an x86-64 processor which has the AES-NI extensi
 
 This application is simple and does one thing only. It is freestanding and doesn't do any system calls. All it does, is simple calculations and it attempts to make these faster using the AES-NI extension of the x86-64 processors.
 
-To use the library, you can either download the precompiled libraries from this repository or compile your own using the scripts provided. There are scripts for Linux (tested on Ubuntu), Mac and Windows 10.
+To use the library, you can either download the precompiled libraries from this repository or compile your own using the scripts provided. There are scripts for Linux (tested on Ubuntu), Mac and Windows 10. To use the **static library** from C or C++ code, you must define the STATIC macro before including the hash.h header.
+Example:
+```
+#define STATIC
+#include "hash.h"
+```
 
 To use the library from C or C++ source code, simply call the corresponding begin, update and finish methods of the hashing function you want to use. 
 
