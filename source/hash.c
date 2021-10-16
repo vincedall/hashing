@@ -1,3 +1,10 @@
+/**
+	\file hash.c
+    \brief Implementation of hashing library in C.
+	\author Vincent Dallaire
+	\version 1.0
+*/
+
 #include "hash.h"
 
 unsigned int leftrotate(unsigned int x, unsigned int offset){
@@ -13,7 +20,7 @@ void sha1begin(struct H* h){
 	h->mlen = 0;
 }
 
-void sha1update(unsigned char* buf, unsigned long len, struct H* h){
+void sha1update(unsigned char* buf, unsigned long long len, struct H* h){
 	unsigned int a = 0;
 	unsigned int b = 0;
 	unsigned int c = 0;
@@ -70,7 +77,7 @@ void sha1update(unsigned char* buf, unsigned long len, struct H* h){
 	}
 }
 
-void sha1finish(unsigned char* buf, unsigned long len, struct H* h, unsigned char* digest){
+void sha1finish(unsigned char* buf, unsigned long long len, struct H* h, unsigned char* digest){
 	buf[len] = 0x80;
 	h->mlen += len * 8;
 	unsigned long long zeroes = 448 - ((h->mlen + 1) % 512);
