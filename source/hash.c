@@ -1,5 +1,4 @@
 #include "hash.h"
-#include <stdio.h>
 
 unsigned int leftrotate(unsigned int x, unsigned int offset){
     return (x << offset) | (x >> (32 - offset));
@@ -76,6 +75,7 @@ void sha1finish(unsigned char* buf, unsigned long len, struct H* h, unsigned cha
 	h->mlen += len * 8;
 	unsigned long long zeroes = 448 - ((h->mlen + 1) % 512);
 	zeroes -= 7;
+	zeroes /= 8;
 	buf[len + zeroes + 1] = h->mlen >> 56;
 	buf[len + zeroes + 2] = h->mlen >> 48;
 	buf[len + zeroes + 3] = h->mlen >> 40;
