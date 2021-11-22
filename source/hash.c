@@ -25,7 +25,7 @@ void sha1update(unsigned char* buf, unsigned long long len, struct H* h) {
 	h->mlen += len * 8;
 
 	for (unsigned int i = 0; i < n; ++i) {
-		unsigned long start = i * 64;
+		unsigned long long start = i * 64;
 
 		unsigned char* cdest = (unsigned char*)&w[0];
 		unsigned char* csrc = (unsigned char*)&buf[start];
