@@ -2,22 +2,22 @@
 #define HASH_H
 
 #ifndef STATIC
-#define EXTERN
-#ifdef _WIN32
-#ifdef HASH_EXPORTS
-#define ADDAPI __declspec(dllexport)
+	#define EXTERN
+	#ifdef _WIN32
+		#ifdef HASH_EXPORTS
+			#define ADDAPI __declspec(dllexport)
+		#else
+			#define ADDAPI __declspec(dllimport)
+		#endif
+		#define ADDCALL __cdecl
+	#else
+		#define ADDAPI
+		#define ADDCALL
+	#endif
 #else
-#define ADDAPI __declspec(dllimport)
-#endif
-#define ADDCALL __cdecl
-#else
-#define ADDAPI
-#define ADDCALL
-#endif
-#else
-#define ADDAPI
-#define ADDCALL
-#define EXTERN extern
+	#define ADDAPI
+	#define ADDCALL
+	#define EXTERN extern
 #endif
 
 #define SHA3_256_DIGEST_SIZE 256
