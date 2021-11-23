@@ -76,49 +76,69 @@ void sha1update(unsigned char* buf, unsigned long long len, struct H* h) {
 void sha1finish(unsigned char* buf, unsigned long long len, struct H* h, unsigned char* digest) {
 	unsigned char padding[64];
 	unsigned int pad = 0;
-	h->mlen += len * 8;
-	unsigned long long lenmod64 = len % 64;
-	if (lenmod64 > 55 || lenmod64 == 0) {
-		for (unsigned int i = 0; i < 64; ++i) {
-			padding[i] = 0;
+	if (len != 0) {
+		h->mlen += len * 8;
+		unsigned long long lenmod64 = len % 64;
+		for (unsigned int i = len; i < len + (64 - lenmod64); ++i) {
+			buf[i] = 0;
 		}
-		pad = 1;
-		padding[56] = h->mlen >> 56;
-		padding[57] = h->mlen >> 48;
-		padding[58] = h->mlen >> 40;
-		padding[59] = h->mlen >> 32;
-		padding[60] = h->mlen >> 24;
-		padding[61] = h->mlen >> 16;
-		padding[62] = h->mlen >> 8;
-		padding[63] = h->mlen;
+		if (lenmod64 > 55 || lenmod64 == 0) {
+			for (unsigned int i = 0; i < 64; ++i) {
+				padding[i] = 0;
+			}
+			pad = 1;
+			padding[56] = h->mlen >> 56;
+			padding[57] = h->mlen >> 48;
+			padding[58] = h->mlen >> 40;
+			padding[59] = h->mlen >> 32;
+			padding[60] = h->mlen >> 24;
+			padding[61] = h->mlen >> 16;
+			padding[62] = h->mlen >> 8;
+			padding[63] = h->mlen;
+		}
+		else {
+			buf[len + (64 - lenmod64 - 8)] = h->mlen >> 56;
+			buf[len + (64 - lenmod64 - 7)] = h->mlen >> 48;
+			buf[len + (64 - lenmod64 - 6)] = h->mlen >> 40;
+			buf[len + (64 - lenmod64 - 5)] = h->mlen >> 32;
+			buf[len + (64 - lenmod64 - 4)] = h->mlen >> 24;
+			buf[len + (64 - lenmod64 - 3)] = h->mlen >> 16;
+			buf[len + (64 - lenmod64 - 2)] = h->mlen >> 8;
+			buf[len + (64 - lenmod64 - 1)] = h->mlen;
+		}
+
+		if (lenmod64 == 0) {
+			padding[0] = 0x80;
+		}
+		else {
+			buf[len] = 0x80;
+		}
+
+		if (lenmod64 == 0) {
+			sha1update(buf, len, h);
+		}
+		else {
+			sha1update(buf, len + (64 - lenmod64), h);
+		}
+
+		if (pad == 1) {
+			sha1update(padding, 64, h);
+		}
 	}
 	else {
-		buf[len + (64 - lenmod64 - 8)] = h->mlen >> 56;
-		buf[len + (64 - lenmod64 - 7)] = h->mlen >> 48;
-		buf[len + (64 - lenmod64 - 6)] = h->mlen >> 40;
-		buf[len + (64 - lenmod64 - 5)] = h->mlen >> 32;
-		buf[len + (64 - lenmod64 - 4)] = h->mlen >> 24;
-		buf[len + (64 - lenmod64 - 3)] = h->mlen >> 16;
-		buf[len + (64 - lenmod64 - 2)] = h->mlen >> 8;
-		buf[len + (64 - lenmod64 - 1)] = h->mlen;
-	}
-
-	if (lenmod64 == 0) {
-		padding[0] = 0x80;
-	}
-	else {
-		buf[len] = 0x80;
-	}
-
-	if (lenmod64 == 0) {
-		sha1update(buf, len, h);
-	}
-	else {
-		sha1update(buf, len + (64 - (lenmod64)), h);
-	}
-
-	if (pad == 1) {
-		sha1update(padding, 64, h);
+		for (unsigned int i = 1; i < 56; ++i) {
+			buf[i] = 0;
+		}
+		buf[56] = h->mlen >> 56;
+		buf[57] = h->mlen >> 48;
+		buf[58] = h->mlen >> 40;
+		buf[59] = h->mlen >> 32;
+		buf[60] = h->mlen >> 24;
+		buf[61] = h->mlen >> 16;
+		buf[62] = h->mlen >> 8;
+		buf[63] = h->mlen;
+		buf[0] = 0x80;
+		sha1update(buf, 64, h);
 	}
 
 	digest[0] = h->h0 >> 24;
