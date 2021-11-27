@@ -20,7 +20,7 @@ void sha1update(unsigned char* buf, unsigned long long len, struct H* h) {
 	unsigned int c = 0;
 	unsigned int d = 0;
 	unsigned int e = 0;
-	unsigned int n = len / 64;
+	unsigned long long n = len / 64;
 	unsigned int w[80];
 	unsigned int T = 0;
 	h->mlen += len * 8;
@@ -30,15 +30,16 @@ void sha1update(unsigned char* buf, unsigned long long len, struct H* h) {
 
 		unsigned char* cdest = (unsigned char*)&w[0];
 		unsigned char* csrc = (unsigned char*)&buf[start];
-		for (unsigned int i = 0; i < 64; i += 4) {
-			cdest[i] = csrc[i + 3];
-			cdest[i + 1] = csrc[i + 2];
-			cdest[i + 2] = csrc[i + 1];
-			cdest[i + 3] = csrc[i];
+		for (unsigned int j = 0; j < 64; j += 4) {
+			cdest[j] = csrc[j + 3];
+			cdest[j + 1] = csrc[j + 2];
+			cdest[j + 2] = csrc[j + 1];
+			cdest[j + 3] = csrc[j];
 		}
 
 		for (unsigned int t = 16; t < 80; t++) {
-			/*__m128i wt14 = _mm_setr_epi32(w[t - 14], 0, 0, 0);
+			/*
+			__m128i wt14 = _mm_setr_epi32(w[t - 14], 0, 0, 0);
 			__m128i wt16 = _mm_setr_epi32(w[t - 16], 0, 0, 0);
 			__m128i wt8 = _mm_setr_epi32(w[t - 8], 0, 0, 0);
 			__m128i wt3 = _mm_setr_epi32(w[t - 3], 0, 0, 0);
