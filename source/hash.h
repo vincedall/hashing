@@ -1,6 +1,8 @@
 #ifndef HASH_H
 #define HASH_H
 
+#include <intrin.h>
+
 #ifndef STATIC
 #define EXTERN
 #ifdef _WIN32
@@ -24,14 +26,14 @@
 #define SHA256_DIGEST_SIZE 256
 #define SHA1_DIGEST_SIZE 20
 
-struct H {
+typedef struct H {
 	unsigned int h0;
 	unsigned int h1;
 	unsigned int h2;
 	unsigned int h3;
 	unsigned int h4;
 	unsigned long long mlen;
-};
+}H;
 
 #ifdef __cplusplus
 extern "C"

@@ -1,4 +1,5 @@
 #include "hash.h"
+#include <stdio.h>
 
 inline unsigned int leftrotate(unsigned int x, unsigned int offset) {
 	return (x << offset) | (x >> (32 - offset));
@@ -25,7 +26,7 @@ void sha1update(unsigned char* buf, unsigned long long len, struct H* h) {
 	h->mlen += len * 8;
 
 	for (unsigned int i = 0; i < n; ++i) {
-		unsigned long long start = i * 64;
+		unsigned long long start = (unsigned long long)i * 64;
 
 		unsigned char* cdest = (unsigned char*)&w[0];
 		unsigned char* csrc = (unsigned char*)&buf[start];
@@ -37,6 +38,15 @@ void sha1update(unsigned char* buf, unsigned long long len, struct H* h) {
 		}
 
 		for (unsigned int t = 16; t < 80; t++) {
+			/*__m128i wt14 = _mm_setr_epi32(w[t - 14], 0, 0, 0);
+			__m128i wt16 = _mm_setr_epi32(w[t - 16], 0, 0, 0);
+			__m128i wt8 = _mm_setr_epi32(w[t - 8], 0, 0, 0);
+			__m128i wt3 = _mm_setr_epi32(w[t - 3], 0, 0, 0);
+			__m128i inter = _mm_sha1msg1_epu32(wt14, wt16);
+			inter = _mm_xor_si128(wt8, inter);
+			inter = _mm_sha1msg2_epu32(wt3, inter);
+			w[t] = _mm_extract_epi32(inter, 3);
+			*/
 			w[t] = leftrotate(w[t - 3] ^ w[t - 8] ^ w[t - 14] ^ w[t - 16], 1);
 		}
 
