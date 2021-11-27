@@ -381,10 +381,9 @@ int main() {
 		0x23, 0x23, 0x23, 0x23,
 		0x23, 0x23, 0x23, 0x12
 	};
-	unsigned char buf11[64];
 	sha1begin(&h);
 	sha1update(buf10, 128, &h);
-	sha1finish(buf11, 0, &h, digest);
+	sha1finish(0, 0, &h, digest);
 	for (int i = 0; i < 20; i++) {
 		printf("%02x", digest[i]);
 	}

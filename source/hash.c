@@ -126,19 +126,19 @@ void sha1finish(unsigned char* buf, unsigned long long len, struct H* h, unsigne
 		}
 	}
 	else {
-		for (unsigned int i = 1; i < 56; ++i) {
-			buf[i] = 0;
+		for (unsigned int i = 0; i < 64; ++i) {
+			padding[i] = 0;
 		}
-		buf[56] = h->mlen >> 56;
-		buf[57] = h->mlen >> 48;
-		buf[58] = h->mlen >> 40;
-		buf[59] = h->mlen >> 32;
-		buf[60] = h->mlen >> 24;
-		buf[61] = h->mlen >> 16;
-		buf[62] = h->mlen >> 8;
-		buf[63] = h->mlen;
-		buf[0] = 0x80;
-		sha1update(buf, 64, h);
+		padding[0] = 0x80;
+		padding[56] = h->mlen >> 56;
+		padding[57] = h->mlen >> 48;
+		padding[58] = h->mlen >> 40;
+		padding[59] = h->mlen >> 32;
+		padding[60] = h->mlen >> 24;
+		padding[61] = h->mlen >> 16;
+		padding[62] = h->mlen >> 8;
+		padding[63] = h->mlen;
+		sha1update(padding, 64, h);
 	}
 
 	digest[0] = h->h0 >> 24;
